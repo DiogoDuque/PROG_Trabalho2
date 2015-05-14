@@ -8,26 +8,10 @@
 #include <sys/stat.h>
 #include <ctime>
 #include "Player.h"
+#include "types.h"
 
 using namespace std;
 
-//Clear screen
-void clrscr(void)
-{
-	COORD coordScreen = { 0, 0 }; // upper left corner
-	DWORD cCharsWritten;
-	DWORD dwConSize;
-	HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	GetConsoleScreenBufferInfo(hCon, &csbi);
-	dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
-	// fill with spaces
-	FillConsoleOutputCharacter(hCon, TEXT(' '), dwConSize, coordScreen, &cCharsWritten);
-	GetConsoleScreenBufferInfo(hCon, &csbi);
-	FillConsoleOutputAttribute(hCon, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten);
-	// cursor to upper left corner
-	SetConsoleCursorPosition(hCon, coordScreen);
-}
 
 //Ecra inicial (animacao BATALHA NAVAL)
 void initialScreen()
@@ -46,15 +30,15 @@ void initialScreen()
 	line.push_back("Feito por: Miriam Goncalves e Diogo Duque\n");
 	line.push_back("\n");
 	line.push_back("\n");
-	int t1=clock(), t2, i=0;
+	int t1 = clock(), t2, i = 0;
 	while (i<13)
 	{
-		t2=clock();
-		if(t2-t1>550)
+		t2 = clock();
+		if (t2 - t1>550)
 		{
 			cout << line[i];
 			i++;
-			t1=t2;
+			t1 = t2;
 		}
 	}
 
@@ -63,27 +47,27 @@ void initialScreen()
 //Menu principal
 int mainMenu()
 {
-	char option='2';
-	while(option=='2')
+	char option = '2';
+	while (option == '2')
 	{
-		option='a';
-		while(option!='1' && option!='2' && option!='3')
+		option = 'a';
+		while (option != '1' && option != '2' && option != '3')
 		{
 			clrscr();
 			cout << "-----> Jogo da Batalha Naval <-----\n\n";
 			cout << "1 - Jogar\n2 - Top 10\n3 - Sair\n\nInsira a sua escolha: ";
 			cin >> option;
 		}
-		if(option=='1') //Jogar
+		if (option == '1') //Jogar
 			return 1;
-		if(option=='2') //Highscores
+		if (option == '2') //Highscores
 		{
 			clrscr();
 			cout << "High scores:\n\n";
 			string name_highscoresFile, score_highscoresFile;
 			ifstream highscoresFile;
 			highscoresFile.open("highscores.txt");
-			for(int i=1; i<=10; i++) //escreve os highscores
+			for (int i = 1; i <= 10; i++) //escreve os highscores
 			{
 				highscoresFile >> name_highscoresFile;
 				highscoresFile >> score_highscoresFile;
@@ -92,7 +76,7 @@ int mainMenu()
 			highscoresFile.close();
 			system("PAUSE");
 		}
-		if(option=='3') //Exit
+		if (option == '3') //Exit
 			break; //Usei o break e "adiei" o return 3 para que nao aparecesse um warning
 	}
 	return 3;
@@ -104,7 +88,7 @@ string choosePlayerName(int player_number)
 	string player_name;
 	cout << "\n\n------------------------\nNome do jogador " << player_number << " (2 a 5 Carateres): ";
 	cin >> player_name;
-	while((player_name.size() < 2) || (player_name.size() > 5))
+	while ((player_name.size() < 2) || (player_name.size() > 5))
 	{
 		clrscr();
 		cout << "ERRO: O nome do jogador deve ter entre 2 a 5 carateres!" << endl;
@@ -115,10 +99,10 @@ string choosePlayerName(int player_number)
 }
 
 //Funcao auxiliar de choosePlayerBoard
-bool exists (const string& name)
+bool exists(const string& name)
 {
-  struct stat buffer;   
-  return (stat (name.c_str(), &buffer) == 0); 
+	struct stat buffer;
+	return (stat(name.c_str(), &buffer) == 0);
 }
 
 //Escolhe o tabuleiro de um jogador
@@ -127,7 +111,7 @@ string choosePlayerBoard(int player_number)
 	cout << "\n\n------------------------\nNome do ficheiro de tabuleiro do jogador " << player_number << ": ";
 	string player_board;
 	cin >> player_board;
-	while(!exists(player_board))
+	while (!exists(player_board))
 	{
 		clrscr();
 		cout << "ERRO: O tabuleiro nao existe!" << endl;
@@ -147,7 +131,7 @@ bool EditHighScores(int score, string player)
 	vector<int> listScores;
 	string passador_string;
 	int passador_int;
-	for (int contador=0; contador<10; contador++)
+	for (int contador = 0; contador<10; contador++)
 	{
 		readHighScores >> passador_string;
 		listNames.push_back(passador_string);
@@ -156,32 +140,32 @@ bool EditHighScores(int score, string player)
 	}
 	readHighScores.close();
 	//Verificar se novo score deve ser posto
-	if(passador_int>score)
+	if (passador_int>score)
 		return false;
 	//Escolher a posicao do novo score
 	vector<int> scores;
 	vector<string> names;
-	if(score>listScores[0]) //1º lugar
+	if (score>listScores[0]) //1º lugar
 	{
 		scores.push_back(score);
 		names.push_back(player);
-		for(int i=0; i<9;i++)
+		for (int i = 0; i<9; i++)
 		{
 			scores.push_back(listScores[i]);
 			names.push_back(listNames[i]);
 		}
-		listScores=scores;
-		listNames=names;
+		listScores = scores;
+		listNames = names;
 	}
 	else //2º-10º lugar
 	{
-		for(int i=0; i<10; i++)
+		for (int i = 0; i<10; i++)
 		{
-			if(score>listScores[i]) //Inserir o novo high score
+			if (score>listScores[i]) //Inserir o novo high score
 			{
 				scores.push_back(score);
 				names.push_back(player);
-				while(i<9) //inserir o resto do vetor (exceto ultimo elemento)
+				while (i<9) //inserir o resto do vetor (exceto ultimo elemento)
 				{
 					scores.push_back(listScores[i]);
 					names.push_back(listNames[i]);
@@ -197,8 +181,8 @@ bool EditHighScores(int score, string player)
 		}
 	}
 	//reescrever ficheiro
-	ofstream highscoresFile ("highscores.txt");
-	for (int i=0; i<10; i++)
+	ofstream highscoresFile("highscores.txt");
+	for (int i = 0; i<10; i++)
 		highscoresFile << names[i] << " " << scores[i] << endl;
 	highscoresFile.close();
 	return true;
@@ -215,55 +199,60 @@ bool play(Player player, Player opponent)
 //main
 int main()
 {
+	/*
 	initialScreen();
 	int option = mainMenu();
-	if (option==3)
+	if (option == 3)
 		return 0;
 	//Escolher se 1 ou 2 players
-	char numPlayers='0';
-	while(numPlayers!='1' && numPlayers!='2')
+	char numPlayers = '0';
+	while (numPlayers != '1' && numPlayers != '2')
 	{
 		clrscr();
 		cout << "-----> Jogo da Batalha Naval <-----\n\n";
 		cout << "Insira a quantidade de jogares:\n1 - Jogador vs CPU\n2 - Jogador vs Jogador\n";
 		cin >> numPlayers;
 	}
-	
+
 	// definir nomes e tabuleiros dos jogadores
 	string player1_name = choosePlayerName(1);
 	string player1_board = choosePlayerBoard(1);
 	string player2_name;
-	if (numPlayers==1)
+	if (numPlayers == 1)
 	{
-		player2_name="CPU";
+		player2_name = "CPU";
 		cout << "\n\n------------------------\nNome do jogador 2: CPU";
 	}
 	else player2_name = choosePlayerName(2);
 	string player2_board = choosePlayerBoard(2);
 	//criar tabuleiros e jogadores (class player)
-	Player player1(player1_name,player1_board);
-	Player player2(player2_name,player2_board);
+	Player player1(player1_name, player1_board);
+	Player player2(player2_name, player2_board);
 	player1.showBoard();
-	/*//Iniciar jogo
+	//Iniciar jogo
 	srand(time(NULL));
 	int firstPlayer=rand()%1+1;
 	if(firstPlayer==1) //1st Player -> Player 1
-		for(int i=1;i<=10;i++) //gameover por turnos
-		{
-			if(!play(player1,player2))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
-				break;
-			if(!play(player2,player1))//jogada P2 // Se nao conseguir jogar pq nao tem barcos, break
-				break;
-		}
+	for(int i=1;i<=10;i++) //gameover por turnos
+	{
+	if(!play(player1,player2))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
+	break;
+	if(!play(player2,player1))//jogada P2 // Se nao conseguir jogar pq nao tem barcos, break
+	break;
+	}
 	else			//1st Player -> Player 2
-		for(int i=1;i<=10;i++) //gameover por turnos
-		{
-			if(!play(player2,player1))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
-				break;
-			if(!play(player1,player2))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
-				break;
-		}
-		//GAME OVER (Fazer game over screen)
+	for(int i=1;i<=10;i++) //gameover por turnos
+	{
+	if(!play(player2,player1))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
+	break;
+	if(!play(player1,player2))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
+	break;
+	}
+	//GAME OVER (Fazer game over screen)
 	*/
+	Board tabuleiro("tabuleiro.txt");
+	tabuleiro.display();
+
+
 	return 0;
 }

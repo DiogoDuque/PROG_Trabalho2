@@ -8,7 +8,6 @@ Ship::Ship()
 {
 	
 }
-
 Ship::Ship(char Symbol, PositionChar Position, char Orientation, unsigned int Size, unsigned int Color)
 {
 		position.lin = static_cast<int>(Position.lin - 'A');
@@ -17,135 +16,91 @@ Ship::Ship(char Symbol, PositionChar Position, char Orientation, unsigned int Si
 		color = Color;
 		orientation = Orientation;
 		symbol = Symbol;
-		for (unsigned int i = 0; i < size; i++)
-		{
-			status[i] = symbol;
-		}
+		status = string(size, symbol);
 }
-char Ship::getsymbol()
+char Ship::getsymbol() const
 {
 	return symbol;
 }
-char Ship::getorientation()
+char Ship::getorientation() const
 {
 	return orientation;
 }
 
-unsigned int Ship::getsize()
+unsigned int Ship::getsize() const
 {
 	return size;
 }
-unsigned int Ship::getcolor()
+unsigned int Ship::getcolor() const
 {
 	return color;
 }
 
-struct PositionInt Ship::getposition()
+struct PositionInt Ship::getposition() const
 {
 	return position;
 }
 
-bool Ship::move(char direction, bool rotate, unsigned int lineMin, unsigned int columnMin, unsigned int lineMax, unsigned int columnMax) // moves the boat (SEE NOTES)
+void Ship::move(char direction, bool rotate) // moves the boat (SEE NOTES)
 {
-	// simular o movimento do barco
-	PositionInt simulatedPosition = position;
-	switch (direction)
-	{						
-	case 'N':
-	{
-		simulatedPosition.lin--;
-		break;
-	}
-	case 'S':
-	{
-		simulatedPosition.lin++;
-		break;
-	}
-	case 'W':
-	{
-		simulatedPosition.col--;
-		break;
-	}
-	case 'E':
-	{
-		simulatedPosition.col++;
-		break;
-	}
-	default:
-		return false;
-	} 
+		
 
-	if ((simulatedPosition.lin<lineMin) || (simulatedPosition.col<columnMin) || (simulatedPosition.lin>lineMax) || (simulatedPosition.col>columnMax))
-		return false;
+		if (direction == 'N')
+			position.lin = position.lin - 1;
+		else if (direction == 'S')
+			position.lin = position.lin + 1;
+		else if (direction == 'E')
+			position.col = position.col + 1;
+		else
+			position.col = position.col - 1;
 
-	if (rotate == true)
-	{
-		if (orientation == 'H')
-			orientation = 'V';
-		else orientation = 'H';
-	}
-
-		switch (direction)
-	{
-		case 'V':
+		if (rotate)
 		{
-			if (simulatedPosition.lin + size - 1 > lineMax)
-				return false;
-				break;
+			if (orientation == 'H')
+				orientation = 'V';
+			else
+				orientation = 'H';
 		}
-		case 'H':
-		{
-			if (simulatedPosition.col + size - 1 > columnMax)
-				return false;
-			break;
-		}
-		default:
-			return false;
-	}
-	position = simulatedPosition;
-	return true;
+	
+
 }
-bool Ship::moveRand(unsigned int lineMin, unsigned int columnMin, unsigned int lineMax, unsigned int columnMax) // moves the ship randomly
+char Ship::getstatus(unsigned index) const
 {
-	srand((unsigned int) time(NULL));
-	char direction;
-	int randomDirection = rand() % 5;
-	switch (randomDirection)
-	{
-	case 0:
-	{
-		direction = '!'; //Nao mexe
-		break;
-	}
-	case 1:
-	{
-		direction = 'N';
-		break;
-	}
-	case 2:
-	{
-		direction = 'S';
-		break;
-	}
-	case 3:
-	{
-		direction = 'W';
-		break;
-	}
-	case 4:
-	{
-		direction = 'E';
-		break;
-	}
-	}
+	return status[index];
+}
+void Ship::setposition(PositionInt position)
+{
+	this->position.lin = position.lin;
+	this->position.col = position.col;
+}
+void Ship::setorientation(char orientation)
+{
+	this->orientation = orientation;
+}
+void Ship::moveRand()
+{	// creates ship's moving parameters
 
-	bool rotate;
-	if (rand() % 2 == 0)
+	int randomNumber = rand() % 5;		// generate direction move, equal probabilities
+	char direction;
+
+	if (randomNumber == 1)
+		direction = 'N';
+	else if (randomNumber == 2)
+		direction = 'S';
+	else if (randomNumber == 3)
+		direction = 'E';
+	else if (randomNumber == 4)
+		direction = 'W';
+	else								// doesn't move
+		direction = '\0';
+
+
+	bool rotate = true;
+	randomNumber = rand() % 4;			// 25% chance rotating
+	if (randomNumber)
 		rotate = false;
-	else rotate = true;
-	if (move(direction, rotate, lineMin, columnMin, lineMax, columnMax) == true)
-		return true;
-	return false;
+
+	move(direction, rotate);
 }
 bool Ship::attack(size_t partNumber)
 {

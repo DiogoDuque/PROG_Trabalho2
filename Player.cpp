@@ -1,12 +1,14 @@
 #include <iostream>
 #include <string>
 #include "Player.h"
+#include "Bomb.h"
+#include "Board.h"
 
 using namespace std;
 
 Player::Player(string playerName, string boardFilename) : board(Board(boardFilename))
-{
-	name=playerName;
+{	
+	name = playerName;
 }
 
 void Player::showBoard() const
@@ -15,10 +17,7 @@ void Player::showBoard() const
 	tabuleiro.display();
 }
 
-/*Bomb Player::getBomb() const
+Bomb Player::getBomb() const
 {
-	cout << "Insira as coordenadas de destino da bomba: ";
-	Bomb bomba(); //falta inserir
-	bomba.offsetTargetPosition();
+	return Bomb();
 }
-*/

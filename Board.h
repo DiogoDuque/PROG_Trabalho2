@@ -11,7 +11,12 @@ class Board
 {
 public:
 	Board(const string &filename); // loads board from file 'filename'
-	bool putShip(const Ship &s); // adds ship to the board, if possible
+	PositionInt getposition(int value) const;
+	char getorientation(int value) const;
+	void newship(const Ship &ship, int index);
+	void deleteship(PositionInt position, char orientation, unsigned size);
+	bool outoftheboard(const Ship &s) const; // check if the ship is not out of bonds
+	bool overboat(const Ship &s) const; // check if the ship is not over another ship
 	void moveShips(); // tries to randmonly move all the ships of the fleet
 	bool attack(const Bomb &b);
 	void display() const; // displays the colored board during the game

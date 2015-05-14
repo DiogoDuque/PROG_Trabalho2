@@ -4,6 +4,7 @@
 class Bomb
 {
 public:
+	Bomb() {};
 	Bomb(PositionChar targetPosition);
 	PositionChar getTargetPosition(void) const;
 	PositionChar offsettargetposition(void);
