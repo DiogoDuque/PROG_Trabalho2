@@ -15,9 +15,10 @@ void Player::showBoard() const
 	tabuleiro.display();
 }
 
-Bomb Player::getBomb() const;
+/*Bomb Player::getBomb() const
 {
 	cout << "Insira as coordenadas de destino da bomba: ";
-	Bomb bomba;
+	Bomb bomba(); //falta inserir
 	bomba.offsetTargetPosition();
 }
+*/

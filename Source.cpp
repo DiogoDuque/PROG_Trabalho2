@@ -205,8 +205,11 @@ bool EditHighScores(int score, string player)
 }
 
 //Fazer jogada // Se ja nao tiver barcos no proprio tabuleiro, nao joga e retorna false
-bool play(Player player)
+bool play(Player player, Player opponent)
 {
+	//Verificar se o tabuleiro do player ainda tem barcos (fazer funcao possivelmente)
+	//Fazer jogada
+	return false;
 }
 
 //main
@@ -240,26 +243,27 @@ int main()
 	//criar tabuleiros e jogadores (class player)
 	Player player1(player1_name,player1_board);
 	Player player2(player2_name,player2_board);
-	//Iniciar jogo
+	player1.showBoard();
+	/*//Iniciar jogo
 	srand(time(NULL));
 	int firstPlayer=rand()%1+1;
 	if(firstPlayer==1) //1st Player -> Player 1
 		for(int i=1;i<=10;i++) //gameover por turnos
 		{
-			if(!play(player1))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
+			if(!play(player1,player2))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
 				break;
-			if(!play(player2))//jogada P2 // Se nao conseguir jogar pq nao tem barcos, break
+			if(!play(player2,player1))//jogada P2 // Se nao conseguir jogar pq nao tem barcos, break
 				break;
 		}
 	else			//1st Player -> Player 2
 		for(int i=1;i<=10;i++) //gameover por turnos
 		{
-			if(!play(player2))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
+			if(!play(player2,player1))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
 				break;
-			if(!play(player1))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
+			if(!play(player1,player2))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
 				break;
 		}
 		//GAME OVER (Fazer game over screen)
-	
+	*/
 	return 0;
 }
