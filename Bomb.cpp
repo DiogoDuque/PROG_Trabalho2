@@ -6,6 +6,12 @@
 
 using namespace std;
 
+Bomb::Bomb(PositionChar targetPosition)
+{
+	targetLine=targetPosition.lin;
+	targetColumn=targetPosition.col;
+}
+
  PositionChar Bomb::getTargetPosition() const
 {
 	PositionChar targetposition;

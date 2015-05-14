@@ -204,6 +204,11 @@ bool EditHighScores(int score, string player)
 	return true;
 }
 
+//Fazer jogada // Se ja nao tiver barcos no proprio tabuleiro, nao joga e retorna false
+bool play(Player player)
+{
+}
+
 //main
 int main()
 {
@@ -237,19 +242,24 @@ int main()
 	Player player2(player2_name,player2_board);
 	//Iniciar jogo
 	srand(time(NULL));
-	int 1stPlayer=rand()%1+1;
-	if(1stPlayer=1) //1st Player -> Player 1
+	int firstPlayer=rand()%1+1;
+	if(firstPlayer==1) //1st Player -> Player 1
 		for(int i=1;i<=10;i++) //gameover por turnos
 		{
-			//jogada P1
-			//jogada P2
+			if(!play(player1))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
+				break;
+			if(!play(player2))//jogada P2 // Se nao conseguir jogar pq nao tem barcos, break
+				break;
 		}
 	else			//1st Player -> Player 2
 		for(int i=1;i<=10;i++) //gameover por turnos
 		{
-			//Jogada P2
-			//Jogada P1
+			if(!play(player2))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
+				break;
+			if(!play(player1))//jogada P1 // Se nao conseguir jogar pq nao tem barcos, break
+				break;
 		}
+		//GAME OVER (Fazer game over screen)
 	
 	return 0;
 }

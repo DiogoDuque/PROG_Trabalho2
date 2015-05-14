@@ -1,9 +1,8 @@
-#include <string>
-#include "Board.h"
 #ifndef _Player
 #define _Player
 #include "Bomb.h"
-
+#include <string>
+#include "Board.h"
 using namespace std;
 class Player
 {

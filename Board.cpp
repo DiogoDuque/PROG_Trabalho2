@@ -1,10 +1,47 @@
+#include <iomanip>
 #include <iostream>
+#include <vector>
+#include <string>
+#include <cstdlib>
+#include <windows.h>
 #include <fstream>
 #include <sstream>
-#include <string>
+#include <ctime>
+#include <clocale>
+#include <sys/stat.h>
 #include "Board.h"
 #include "Ship.h"
 
+void clrscr(void)
+{
+	COORD coordScreen = { 0, 0 }; // upper left corner
+	DWORD cCharsWritten;
+	DWORD dwConSize;
+	HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(hCon, &csbi);
+	dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
+	// fill with spaces
+	FillConsoleOutputCharacter(hCon, TEXT(' '), dwConSize, coordScreen, &cCharsWritten);
+	GetConsoleScreenBufferInfo(hCon, &csbi);
+	FillConsoleOutputAttribute(hCon, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten);
+	// cursor to upper left corner
+	SetConsoleCursorPosition(hCon, coordScreen);
+}
+void setcolor(unsigned int color)
+{
+	HANDLE hcon = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hcon, color);
+}
+void setcolor(unsigned int color, unsigned int background_color)
+	{
+		HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
+		if (background_color == 0)
+			SetConsoleTextAttribute(hCon, color);
+		else
+			SetConsoleTextAttribute(hCon, color | BACKGROUND_BLUE | BACKGROUND_GREEN |
+			BACKGROUND_RED);
+	}
 #define BLACK 0
 #define BLUE 1
 #define GREEN 2
@@ -40,9 +77,6 @@ Board::Board(const string &filename)
 		cerr << "Ocorreu um erro ao inserir as dimensoes do tabuleiro!" << endl;
 		exit(1);
 	}
-
-
-	
 
 	while (!file.eof())
 	{	
@@ -110,9 +144,9 @@ bool Board::putShip(const Ship &s)
 			board[position.lin + i][position.col] = symbol;
 	}
 
-	if (((position.lin >(int) board[board.size() - 1][0]) || (position.lin < (int)board[1][0])) || ((position.col >(int) board[0][board[0].size() - 1])
-		|| (position.col < (int)board[0][1])) || ((orientation == 'V') && ((position.lin + size - 1) >(int) board[board.size() - 1][0])) ||
-		((orientation == 'H') && ((position.col + size - 1) > (int)board[0][board[0].size() - 1])))
+	if (((position.lin >= (int) board[board.size() - 1][0]) || (position.lin <= (int)board[1][0])) || ((position.col >= (int) board[0][board[0].size() - 1])
+		|| (position.col <= (int)board[0][1])) || ((orientation == 'V') && ((position.lin + size - 1) >=(int) board[board.size() - 1][0])) ||
+		((orientation == 'H') && ((position.col + size - 1) >= (int)board[0][board[0].size() - 1])))
 		return true;
 		return false;
 
@@ -120,7 +154,7 @@ bool Board::putShip(const Ship &s)
 		int i = 0;
 		if (orientation == 'H')
 		{
-			while (!false && i < size)
+			while (!false && i <= size)
 			{
 				if (board[position.lin][position.col + i] != '.')
 					return true;
@@ -129,7 +163,7 @@ bool Board::putShip(const Ship &s)
 		}
 		else
 		{
-			while (!false && i < size)
+			while (!false && i <= size)
 			{
 				if (board[position.lin + i][position.col] != '.')
 					return true;
@@ -143,20 +177,57 @@ bool Board::putShip(const Ship &s)
 
 void Board::moveShips()
 {
-
 }
 
 bool Board::attack(const Bomb &b)
 {
-
+	return true;
 }
+
+
 
 void Board::display() const
 {
+	Ship ships;
 
+	unsigned int size = ships.getsize();
+	char symbol = ships.getsymbol();
+	struct PositionInt position = ships.getposition();
+	char orientation = ships.getorientation();
+
+	for (unsigned int i = 0; i <= board.size(); i++)
+	{
+		for (unsigned int j = 0; j <= board[i].size(); j++)
+		{
+			if (i == 0 || j == 0)
+				setcolor(WHITE, BLACK);
+			else if (board[i][j] == '.')
+				setcolor(BLUE, LIGHTGRAY);
+			else
+			{
+				unsigned int k = 0;
+				while (symbol != board[i][j])
+				{
+					k++;
+				}
+				setcolor(symbol, LIGHTGRAY);
+			}
+			board[i][j];
+
+		}
+	}
 }
 
 void Board::show() const
 {
-
+	for (unsigned int i = 0; i <= board.size(); i++)
+	{
+		for (unsigned int j = 0; j <= board[i].size(); j++)
+		{
+		cout << board[i][j];
+		cout << " ";
+		}
+		cout << endl;
+	}
 }
+
