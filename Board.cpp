@@ -54,6 +54,11 @@ Board::Board(const string &filename)
 		for (int j = 0; j < numColumns; j++)
 			board[i][j] = -1;
 	}
+	{
+		for (unsigned i = position.lin; i < position.lin + size; i++)
+			board[i][position.col] = ships.size() - 1;
+	}
+	
 }
 PositionInt Board::getposition(int value) const
 {
@@ -108,16 +113,16 @@ bool Board::overboat(const Ship &s) const
 	}
 	return false;
 }
-void Board::newship(const Ship &ship, int index)
+void Board::newship(const Ship &s, int index)
 {
-	PositionInt position = ship.getposition();
-	unsigned size = ship.getsize();
+	PositionInt position = s.getposition();
+	unsigned size = s.getsize();
 
-	if (ship.getorientation() == 'H')
+	if (s.getorientation() == 'H')
 	{
 		for (unsigned i = position.col; i < position.col + size; i++)
 		{
-			char status_point = ship.getstatus(i - position.col);			// status of a specific part of the ship
+			char status_point = s.getstatus(i - position.col);			// status of a specific part of the ship
 			if (status_point == toupper(status_point))
 				board[position.lin][i] = index;
 			else
@@ -128,7 +133,7 @@ void Board::newship(const Ship &ship, int index)
 	{
 		for (unsigned i = position.lin; i < position.lin + size; i++)
 		{
-			char status_point = ship.getstatus(i - position.lin);
+			char status_point = s.getstatus(i - position.lin);
 			if (status_point == toupper(status_point))
 				board[i][position.col] = index;
 			else

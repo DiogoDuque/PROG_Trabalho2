@@ -12,6 +12,7 @@ class Board
 public:
 	Board(const string &filename); // loads board from file 'filename'
 	PositionInt getposition(int value) const;
+	void putShip(const Ship &s);
 	char getorientation(int value) const;
 	void newship(const Ship &ship, int index);
 	void deleteship(PositionInt position, char orientation, unsigned size);
